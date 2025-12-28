@@ -1,14 +1,12 @@
-import { useEffect } from "react";
-import { getTodaySummary } from "./api/weatherApi";
+import Dashboard from "./pages/Dashboard";
 
-const App = () => {
-  useEffect(() => {
-    getTodaySummary("Delhi")
-      .then(console.log)
-      .catch(console.error);
-  }, []);
-
-  return <div className="p-8 text-xl">Weather Intelligence Dashboard</div>;
-};
+function App() {
+  return (
+    <>
+      <h1>Weather Intelligence Dashboard</h1>
+      <Dashboard />
+    </>
+  );
+}
 
 export default App;

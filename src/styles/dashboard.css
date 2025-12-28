@@ -1,0 +1,334 @@
+/* =========================================================
+   DASHBOARD LAYOUT
+========================================================= */
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 24px;
+}
+
+/* Grid for grouped cards */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+/* Full-width sections */
+.dashboard-wide {
+  width: 100%;
+}
+
+/* =========================================================
+   CARD BASE
+========================================================= */
+
+.card {
+  background: radial-gradient(
+    120% 120% at top left,
+    #0f172a 0%,
+    #020617 65%
+  );
+  color: white;
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+/* =========================================================
+   TRAVEL SCORE CARD
+========================================================= */
+
+.travel-score-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.travel-score-card svg {
+  transform: rotate(-90deg);
+}
+
+.score-text {
+  margin-top: -110px;
+  text-align: center;
+}
+
+.score-text h1 {
+  font-size: 2.6rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+.score-text span {
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+/* =========================================================
+   HEALTH ADVISORY
+========================================================= */
+
+.health-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.health {
+  padding: 14px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+.health strong {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.health.low {
+  background: rgba(34, 197, 94, 0.18);
+  color: #22c55e;
+}
+
+.health.moderate {
+  background: rgba(250, 204, 21, 0.18);
+  color: #facc15;
+}
+
+.health.high {
+  background: rgba(239, 68, 68, 0.18);
+  color: #ef4444;
+}
+
+/* =========================================================
+   OCCUPATION INSIGHTS
+========================================================= */
+
+.occupation-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.impact-score {
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.warning-title {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.warning-list li {
+  color: #ef4444;
+}
+
+/* ================= KPI STRIP ================= */
+
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.kpi-card {
+  background: #0f172a;
+  border-radius: 14px;
+  padding: 14px 16px;
+  color: #e5e7eb;
+}
+
+.kpi-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.kpi-icon {
+  color: #38bdf8;
+  font-size: 1.2rem;
+}
+
+.kpi-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.kpi-title {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.kpi-value {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.kpi-sub {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.kpi-info {
+  margin-left: auto;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.kpi-reason {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+/* ================= DAY TIMELINE (FIXED) ================= */
+
+.timeline-wrapper {
+  background: radial-gradient(
+    120% 120% at top left,
+    #0f172a 0%,
+    #020617 60%
+  );
+  border-radius: 18px;
+  padding: 20px;
+  color: white;
+}
+
+.timeline-subtitle {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-bottom: 16px;
+}
+
+.timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.timeline-card-mini {
+  background: linear-gradient(180deg, #020617, #0f172a);
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+.timeline-top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.timeline-status {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.timeline-status.good {
+  background: rgba(34,197,94,0.2);
+  color: #22c55e;
+}
+
+.timeline-status.caution {
+  background: rgba(250,204,21,0.2);
+  color: #facc15;
+}
+
+.timeline-status.avoid {
+  background: rgba(239,68,68,0.2);
+  color: #ef4444;
+}
+
+.timeline-temp {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 6px 0;
+}
+
+.timeline-message {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .timeline-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   TIMELINE – AUTO HIGHLIGHT (BEST TIME)
+========================================================= */
+
+.timeline-card-mini {
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Highlight best card */
+.timeline-card-mini.timeline-best {
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 0 1px rgba(34, 197, 94, 0.25),
+    0 0 22px rgba(34, 197, 94, 0.45),
+    0 12px 28px rgba(0, 0, 0, 0.45);
+}
+
+/* Subtle glow ring */
+.timeline-card-mini.timeline-best::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 16px;
+  pointer-events: none;
+  box-shadow: 0 0 28px rgba(34, 197, 94, 0.35);
+}
+
+/* Emphasize label */
+.timeline-card-mini.timeline-best strong {
+  color: #22c55e;
+}
+
+/* Slightly stronger status pill */
+.timeline-card-mini.timeline-best .timeline-status.good {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 16px;
+  }
+
+  .row-right {
+    max-width: 100%;
+    align-items: flex-start;
+    text-align: left;
+  }
+}
