@@ -1,16 +1,9 @@
 import { useEffect, useState } from "react";
 import type { OccupationType } from "../types/occupation";
-
-export interface OccupationWeatherResult {
-  city: string;
-  occupation: OccupationType;
-  suitabilityScore: number;
-  suitabilityLabel: string;
-  opportunities: string[];
-  risks: string[];
-  recommendedActions: string[];
-  bestTimeWindow?: string;
-}
+import {
+  fetchOccupationWeather,
+  type OccupationWeatherResult,
+} from "../api/occupationApi";
 
 export function useOccupationWeather(
   city: string | null,
@@ -21,39 +14,40 @@ export function useOccupationWeather(
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!city) return;
+    if (!city) {
+      setData(null);
+      return;
+    }
 
-    setLoading(true);
-    setError(null);
+    let cancelled = false;
 
-    fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/api/v1/occupation/${encodeURIComponent(
-        city
-      )}?occupation=${occupation}`
-    )
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch occupation weather");
-        return res.json();
-      })
-      .then((res) => {
-        // ✅ Normalize backend response
-        setData({
-          city: res.city,
-          occupation: res.occupation,
-          suitabilityScore: res.suitabilityScore,
-          suitabilityLabel: res.suitabilityLabel,
-          opportunities: res.opportunities ?? [],
-          risks: res.risks ?? [],
-          recommendedActions: res.recommendedActions ?? [],
-          bestTimeWindow: res.bestTimeWindow
-        });
-      })
-      .catch((err) => {
+    async function load(cityValue: string) {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const result = await fetchOccupationWeather(cityValue, occupation);
+        if (!cancelled) {
+          setData(result);
+        }
+      } catch (err) {
         console.error(err);
-        setError("Occupation insights unavailable");
-        setData(null);
-      })
-      .finally(() => setLoading(false));
+        if (!cancelled) {
+          setError("Occupation insights unavailable");
+          setData(null);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    load(city);
+
+    return () => {
+      cancelled = true;
+    };
   }, [city, occupation]);
 
   return { data, loading, error };

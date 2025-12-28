@@ -82,14 +82,13 @@ function TimelineCard({
     status === "Good"
       ? "good"
       : status === "Caution"
-      ? "caution"
-      : "avoid";
+        ? "caution"
+        : "avoid";
 
   return (
     <div
-      className={`timeline-card-mini ${statusClass} ${
-        highlight ? "timeline-best" : ""
-      }`}
+      className={`timeline-card-mini ${statusClass} ${highlight ? "timeline-best" : ""
+        }`}
     >
       <div className="timeline-top">
         {icon}

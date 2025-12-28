@@ -3,7 +3,7 @@ import { getTodaySummary, getTravelScore } from "../api/weatherApi";
 
 export function useWeatherDashboard(city: string) {
   const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -12,6 +12,7 @@ export function useWeatherDashboard(city: string) {
     async function load() {
       try {
         setLoading(true);
+        setError(null);
 
         const [summary, travelScore] = await Promise.all([
           getTodaySummary(city),
@@ -24,8 +25,8 @@ export function useWeatherDashboard(city: string) {
             travelScore,
           });
         }
-      } catch (err) {
-        if (!cancelled) setError("Unable to load dashboard");
+      } catch {
+        if (!cancelled) setError("Unable to update weather");
       } finally {
         if (!cancelled) setLoading(false);
       }

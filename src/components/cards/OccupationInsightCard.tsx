@@ -47,8 +47,8 @@ export default function OccupationInsightCard({ data }: Props) {
     suitabilityScore >= 80
       ? "#22c55e"
       : suitabilityScore >= 60
-      ? "#facc15"
-      : "#ef4444";
+        ? "#facc15"
+        : "#ef4444";
 
   /* ---------- Animated counter ---------- */
   const count = useMotionValue(0);

@@ -21,8 +21,8 @@ export default function SuitabilityGauge({
     progress >= 80
       ? "#2ecc71"
       : progress >= 50
-      ? "#f1c40f"
-      : "#e74c3c";
+        ? "#f1c40f"
+        : "#e74c3c";
 
   return (
     <div style={{ width: size, textAlign: "center" }}>

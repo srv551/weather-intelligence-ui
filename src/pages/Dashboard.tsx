@@ -1,102 +1,65 @@
+// Dashboard.tsx
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { useWeatherDashboard } from "../hooks/useWeatherDashboard";
 import { useOccupationWeather } from "../hooks/useOccupationWeather";
+import { useInitialCity } from "../hooks/useInitialCity";
 
-import { AnimatedCard } from "../components/common/AnimatedCard";
 import TravelScoreCard from "../components/cards/TravelScoreCard";
 import HealthIndicatorsCard from "../components/cards/HealthIndicatorsCard";
 import OccupationSuitabilityCard from "../components/cards/OccupationSuitabilityCard";
 
-import AmbientWeatherOverlay from "../components/common/AmbientWeatherOverlay";
-import AnimatedWeatherIcon from "../components/common/AnimatedWeatherIcon";
-import CitySearch from "../components/controls/CitySearch";
 import KpiStrip from "../components/kpi/KpiStrip";
 import DayTimeline from "../components/timeline/DayTimeline";
+
+import TopSearchBar from "../components/layout/TopSearchBar";
+import HeroWeather from "../components/hero/HeroWeather";
 
 import type { OccupationType } from "../types/occupation";
 import { Occupations } from "../types/occupation";
 
 export default function Dashboard() {
-  const [city, setCity] = useState("Waterloo");
+  const { city, setCity, resolved } = useInitialCity();
+  const safeCity = city ?? "Waterloo";
 
-  const { data, loading, error } = useWeatherDashboard(city);
+  const { data } = useWeatherDashboard(safeCity);
 
   const [occupation, setOccupation] = useState<OccupationType>(
     Occupations.OfficeWorker.value
   );
 
-  const {
-    data: occupationData,
-    loading: occupationLoading,
-  } = useOccupationWeather(data?.current?.city ?? null, occupation);
+  const { data: occupationData, loading: occupationLoading } =
+    useOccupationWeather(data?.current?.city ?? null, occupation);
 
-  /* -------------------- Guards -------------------- */
-  if (loading) return <p>Loading dashboard...</p>;
-  if (error) return <p>{error}</p>;
+  if (!resolved) return <p>Detecting your location…</p>;
+
+  if (!data || !data.current) {
+    return <p>Loading initial data…</p>;
+  }
   if (!data || !data.current) return <p>No weather data available.</p>;
 
-  /* -------------------- Render -------------------- */
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={city}
-        className="dashboard"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.45, ease: "easeOut" }}
-      >
-        {/* ================= TOP GRID ================= */}
-        <div className="dashboard-grid">
-          {/* City Search */}
-          <AnimatedCard>
-            <h3>Search City</h3>
-            <CitySearch value={city} onSearch={setCity} />
-          </AnimatedCard>
+    <>
+      <TopSearchBar city={safeCity} onCityChange={setCity} />
 
-          {/* Current Weather */}
-          <AnimatedCard>
-            <div style={{ position: "relative", overflow: "hidden" }}>
-              <AmbientWeatherOverlay condition={data.current.description} />
-
-              <div style={{ position: "relative", zIndex: 2 }}>
-                <AnimatedWeatherIcon
-                  condition={data.current.description}
-                  size={72}
-                />
-
-                <h2>{data.current.city}</h2>
-                <p>{data.current.description}</p>
-                <h1>{data.current.temperature}°C</h1>
-                <p>
-                  Feels like {data.current.feelsLike}°C · Humidity{" "}
-                  {data.current.humidity}%
-                </p>
-              </div>
-            </div>
-          </AnimatedCard>
-
-          {/* Travel Score */}
-          {data.travelScore && (
-            <TravelScoreCard
-              score={data.travelScore.overallScore}
-              label={data.travelScore.comfortLabel}
-            />
-          )}
-
-          {/* Occupation Suitability (Selector + Insight unified) */}
-          <OccupationSuitabilityCard
-            occupation={occupation}
-            onOccupationChange={setOccupation}
-            data={occupationData ?? undefined}
-            loading={occupationLoading}
+      {/* ================= HERO + SIDE INFO ================= */}
+      <section className="hero-layout">
+        <div className="hero-main">
+          <HeroWeather
+            city={data.current.city}
+            description={data.current.description}
+            temperature={data.current.temperature}
+            feelsLike={data.current.feelsLike}
+            humidity={data.current.humidity}
+            windKph={data.current.windKph}
+            aqi={data.current.airQuality?.usEpaIndex}
+            sunrise={data.astronomy?.sunrise}
           />
+
         </div>
 
-        {/* ================= KPI STRIP ================= */}
-        <div className="dashboard-wide">
+        <div className="hero-side">
           <KpiStrip
             occupation={occupation}
             aqi={data.current.airQuality?.usEpaIndex}
@@ -104,31 +67,53 @@ export default function Dashboard() {
             temperature={data.current.temperature}
             bestTime={data.astronomy?.sunrise}
           />
-        </div>
 
-        {/* ================= DAY TIMELINE ================= */}
-        <div className="dashboard-wide">
           <DayTimeline
             occupation={occupation}
             morningTemp={data.forecastToday.minTemp}
             afternoonTemp={data.forecastToday.maxTemp}
             eveningTemp={Math.round(
-              (data.forecastToday.minTemp +
-                data.forecastToday.maxTemp) / 2
+              (data.forecastToday.minTemp + data.forecastToday.maxTemp) / 2
             )}
           />
         </div>
+      </section>
 
-        {/* ================= HEALTH ================= */}
-        <div className="dashboard-grid">
-          <HealthIndicatorsCard
-            temperature={data.current.temperature}
-            uv={data.current.uv}
-            airQualityIndex={data.current.airQuality?.usEpaIndex}
-            pm25={data.current.airQuality?.pm2_5}
-          />
-        </div>
-      </motion.div>
-    </AnimatePresence>
+      {/* ================= MAIN DASHBOARD ================= */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={safeCity}
+          className="dashboard"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -12 }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
+        >
+          <div className="dashboard-grid">
+            <TravelScoreCard
+              score={data.travelScore?.overallScore ?? 0}
+              label={data.travelScore?.comfortLabel ?? ""}
+              unavailable={!data.travelScore}
+            />
+
+            <OccupationSuitabilityCard
+              occupation={occupation}
+              onOccupationChange={setOccupation}
+              data={occupationData ?? undefined}
+              loading={occupationLoading}
+            />
+          </div>
+
+          <div className="dashboard-grid">
+            <HealthIndicatorsCard
+              temperature={data.current.temperature}
+              uv={data.current.uv}
+              airQualityIndex={data.current.airQuality?.usEpaIndex}
+              pm25={data.current.airQuality?.pm2_5}
+            />
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    </>
   );
 }

@@ -107,8 +107,8 @@ function HealthRiskItem({ risk }: { risk: HealthRisk }) {
     risk.level === "High"
       ? "#ef4444"
       : risk.level === "Moderate"
-      ? "#f59e0b"
-      : "#22c55e";
+        ? "#f59e0b"
+        : "#22c55e";
 
   return (
     <motion.div

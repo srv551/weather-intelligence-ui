@@ -1,4 +1,505 @@
 /* =========================================================
+   TOP SEARCH BAR
+========================================================= */
+
+.top-search-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: linear-gradient(180deg, #020617, #020617cc);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.top-search-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.brand svg {
+  color: #38bdf8;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-box input {
+  background: #020617;
+  border: 1px solid #334155;
+  color: #e5e7eb;
+  padding: 10px 14px;
+  border-radius: 10px;
+  width: 220px;
+}
+
+.search-box button {
+  display: inline-flex;
+  /* 🔑 FIX */
+  align-items: center;
+  /* 🔑 FIX */
+  gap: 8px;
+  /* spacing icon ↔ text */
+
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1;
+  /* 🔑 FIX */
+}
+
+.search-box button svg {
+  display: block;
+  /* prevents vertical offset */
+}
+
+
+.search-box button:hover {
+  background: #1d4ed8;
+}
+
+/* =========================================================
+   HERO WEATHER (SAFE, ISOLATED, NON-BREAKING)
+========================================================= */
+
+.hero-weather {
+  position: relative;
+  margin: 24px;
+  padding: 28px 32px;
+  /* ⬅ reduced vertical padding */
+  border-radius: 22px;
+
+  background: radial-gradient(120% 120% at top left,
+      #0f172a 0%,
+      #020617 65%);
+
+  color: white;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* Atmosphere layer — NEVER escapes hero */
+.hero-weather .atmosphere,
+.hero-weather .hero-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+/* Content always above atmosphere */
+.hero-content,
+.hero-metrics {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-loading-overlay {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(2px);
+  background: rgba(2, 6, 23, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cbd5f5;
+  font-size: 0.9rem;
+  z-index: 4;
+}
+
+/* =========================================================
+   HERO CONTENT (ALIGNMENT FIX)
+========================================================= */
+
+.hero-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  /* ⬅ prevents vertical drift */
+  gap: 32px;
+}
+
+.hero-left h1 {
+  font-size: 2.35rem;
+  margin: 0;
+  line-height: 1.15;
+}
+
+.hero-condition {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  color: #94a3b8;
+}
+
+.hero-right {
+  text-align: right;
+  min-width: 180px;
+}
+
+.hero-temp {
+  font-size: 4rem;
+  /* ⬅ slightly reduced for balance */
+  font-weight: 800;
+  line-height: 1;
+}
+
+.hero-meta {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9rem;
+  color: #cbd5f5;
+}
+
+/* =========================================================
+   HERO METRICS (TIGHTENED & GROUNDED)
+========================================================= */
+
+.hero-metrics {
+  margin-top: 20px;
+  /* ⬅ was too low */
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.hero-metric {
+  background: rgba(2, 6, 23, 0.7);
+  border-radius: 14px;
+  padding: 12px 14px;
+  /* ⬅ tighter */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.metric-icon {
+  font-size: 1.2rem;
+}
+
+.metric-text small {
+  display: block;
+  font-size: 0.7rem;
+  opacity: 0.7;
+  line-height: 1.1;
+}
+
+.metric-text strong {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* Mobile hero */
+@media (max-width: 768px) {
+  .hero-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-right {
+    text-align: left;
+  }
+
+  .hero-temp {
+    font-size: 3.2rem;
+  }
+
+  .hero-metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   HERO WEATHER STATES (VISUAL ONLY — SAFE)
+========================================================= */
+
+.hero-weather.weather-sunny .hero-atmosphere {
+  background:
+    radial-gradient(circle at 75% 25%,
+      rgba(255, 200, 80, 0.45),
+      rgba(255, 200, 80, 0.18),
+      transparent 65%);
+}
+
+.hero-weather.weather-cloudy .hero-atmosphere {
+  background:
+    radial-gradient(circle at 40% 30%,
+      rgba(203, 213, 225, 0.35),
+      rgba(148, 163, 184, 0.18),
+      transparent 65%);
+}
+
+.hero-weather.weather-rainy .hero-atmosphere {
+  background:
+    linear-gradient(to bottom,
+      rgba(100, 116, 139, 0.45),
+      rgba(2, 6, 23, 0.9));
+}
+
+.hero-weather.weather-snowy .hero-atmosphere {
+  background:
+    radial-gradient(circle at 50% 30%,
+      rgba(226, 232, 240, 0.45),
+      rgba(148, 163, 184, 0.2),
+      transparent 70%);
+}
+
+.hero-weather.weather-default .hero-atmosphere {
+  background:
+    radial-gradient(circle at 50% 30%,
+      rgba(148, 163, 184, 0.25),
+      transparent 65%);
+}
+
+/* =========================================================
+   HERO ATMOSPHERE – SAFE CONTEXTUAL MOTION
+========================================================= */
+
+.hero-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ------------------ SUN ------------------ */
+
+.weather-sunny .hero-atmosphere::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(circle at 70% 30%,
+      rgba(255, 200, 80, 0.45),
+      rgba(255, 200, 80, 0.15),
+      transparent 65%);
+  animation: sunDrift 18s ease-in-out infinite;
+}
+
+@keyframes sunDrift {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(-4%, 2%);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* ------------------ CLOUDS ------------------ */
+
+.weather-cloudy .hero-atmosphere::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 40%,
+      rgba(255, 255, 255, 0.14),
+      transparent 60%);
+  animation: cloudDrift 22s linear infinite;
+}
+
+@keyframes cloudDrift {
+  from {
+    transform: translateX(-6%);
+  }
+
+  to {
+    transform: translateX(6%);
+  }
+}
+
+/* ------------------ RAIN ------------------ */
+
+.weather-rainy .hero-atmosphere::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(-20deg,
+      rgba(255, 255, 255, 0.12),
+      rgba(255, 255, 255, 0.12) 1px,
+      transparent 1px,
+      transparent 6px);
+  animation: rainFall 0.8s linear infinite;
+}
+
+@keyframes rainFall {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 0 40px;
+  }
+}
+
+/* ------------------ SNOW ------------------ */
+
+.weather-snowy .hero-atmosphere::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.7) 1px,
+      transparent 1px);
+  background-size: 14px 14px;
+  animation: snowFall 6s linear infinite;
+}
+
+@keyframes snowFall {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 0 60px;
+  }
+}
+
+/* ------------------ DEFAULT ------------------ */
+
+.weather-default .hero-atmosphere::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 40%,
+      rgba(148, 163, 184, 0.18),
+      transparent 65%);
+}
+
+/* =========================================================
+   HERO – SPACING & ALIGNMENT FIX (SAFE)
+========================================================= */
+
+/* Tighten hero content top */
+.hero-content {
+  align-items: flex-start;
+}
+
+/* Reduce top visual gap */
+.hero-left h1 {
+  margin-bottom: 4px;
+}
+
+.hero-condition {
+  margin-top: 0;
+}
+
+/* Right temp block alignment */
+.hero-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+
+.hero-meta span {
+  display: block;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   HERO METRICS – ANCHOR TO BOTTOM
+========================================================= */
+
+.hero-metric {
+  height: 64px;
+  justify-content: flex-start;
+}
+
+/* Make metric text align cleanly */
+.metric-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* =========================================================
+   RIGHT SIDE CARDS – ALIGNMENT FIX
+========================================================= */
+
+/* Ensure side cards align from top, not center */
+.dashboard-grid .card,
+.dashboard-wide .card {
+  justify-content: flex-start;
+}
+
+/* Normalize spacing inside small cards */
+.card>*:first-child {
+  margin-top: 0;
+}
+
+.card>*:last-child {
+  margin-bottom: 0;
+}
+
+/* Prevent text drifting horizontally */
+.card {
+  text-align: left;
+}
+
+/* =========================================================
+   TIMELINE MINI CARDS – TEXT ALIGN FIX
+========================================================= */
+
+.timeline-card-mini {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.timeline-temp {
+  margin-top: 8px;
+  margin-bottom: 6px;
+}
+
+/* =========================================================
+   MOBILE SAFETY
+========================================================= */
+
+@media (max-width: 768px) {
+  .hero-weather {
+    min-height: unset;
+  }
+
+  .hero-right {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+
+/* =========================================================
    DASHBOARD LAYOUT
 ========================================================= */
 
@@ -9,14 +510,12 @@
   padding: 24px;
 }
 
-/* Grid for grouped cards */
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
 }
 
-/* Full-width sections */
 .dashboard-wide {
   width: 100%;
 }
@@ -26,114 +525,18 @@
 ========================================================= */
 
 .card {
-  background: radial-gradient(
-    120% 120% at top left,
-    #0f172a 0%,
-    #020617 65%
-  );
+  background: radial-gradient(120% 120% at top left,
+      #0f172a 0%,
+      #020617 65%);
   color: white;
   padding: 22px;
   border-radius: 18px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-  position: relative;
-  overflow: hidden;
 }
 
 /* =========================================================
-   TRAVEL SCORE CARD
+   KPI STRIP (RESTORED – DO NOT CHANGE)
 ========================================================= */
-
-.travel-score-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-}
-
-.travel-score-card svg {
-  transform: rotate(-90deg);
-}
-
-.score-text {
-  margin-top: -110px;
-  text-align: center;
-}
-
-.score-text h1 {
-  font-size: 2.6rem;
-  margin: 0;
-  font-weight: 700;
-}
-
-.score-text span {
-  font-size: 0.9rem;
-  color: #94a3b8;
-}
-
-/* =========================================================
-   HEALTH ADVISORY
-========================================================= */
-
-.health-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.health {
-  padding: 14px;
-  border-radius: 12px;
-  margin-bottom: 12px;
-  font-size: 0.9rem;
-}
-
-.health strong {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 600;
-}
-
-.health.low {
-  background: rgba(34, 197, 94, 0.18);
-  color: #22c55e;
-}
-
-.health.moderate {
-  background: rgba(250, 204, 21, 0.18);
-  color: #facc15;
-}
-
-.health.high {
-  background: rgba(239, 68, 68, 0.18);
-  color: #ef4444;
-}
-
-/* =========================================================
-   OCCUPATION INSIGHTS
-========================================================= */
-
-.occupation-card {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.impact-score {
-  font-size: 1.2rem;
-  margin-bottom: 12px;
-  font-weight: 600;
-}
-
-.warning-title {
-  color: #ef4444;
-  font-weight: 600;
-}
-
-.warning-list li {
-  color: #ef4444;
-}
-
-/* ================= KPI STRIP ================= */
 
 .kpi-strip {
   display: grid;
@@ -155,14 +558,13 @@
 }
 
 .kpi-icon {
-  color: #38bdf8;
   font-size: 1.2rem;
+  color: #38bdf8;
 }
 
 .kpi-text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
 }
 
 .kpi-title {
@@ -192,14 +594,14 @@
   color: #94a3b8;
 }
 
-/* ================= DAY TIMELINE (FIXED) ================= */
+/* =========================================================
+   DAY TIMELINE (RESTORED & COMPACT)
+========================================================= */
 
 .timeline-wrapper {
-  background: radial-gradient(
-    120% 120% at top left,
-    #0f172a 0%,
-    #020617 60%
-  );
+  background: radial-gradient(120% 120% at top left,
+      #0f172a 0%,
+      #020617 60%);
   border-radius: 18px;
   padding: 20px;
   color: white;
@@ -222,7 +624,7 @@
   border-radius: 14px;
   padding: 16px;
   text-align: center;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 
 .timeline-top {
@@ -230,7 +632,6 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
-  font-size: 1rem;
   margin-bottom: 8px;
 }
 
@@ -244,22 +645,21 @@
 }
 
 .timeline-status.good {
-  background: rgba(34,197,94,0.2);
+  background: rgba(34, 197, 94, 0.2);
   color: #22c55e;
 }
 
 .timeline-status.caution {
-  background: rgba(250,204,21,0.2);
+  background: rgba(250, 204, 21, 0.2);
   color: #facc15;
 }
 
 .timeline-status.avoid {
-  background: rgba(239,68,68,0.2);
+  background: rgba(239, 68, 68, 0.2);
   color: #ef4444;
 }
 
 .timeline-temp {
-  display: block;
   font-size: 1.1rem;
   font-weight: 700;
   margin: 6px 0;
@@ -268,53 +668,13 @@
 .timeline-message {
   font-size: 0.8rem;
   color: #94a3b8;
-  line-height: 1.4;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .timeline-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* =========================================================
-   TIMELINE – AUTO HIGHLIGHT (BEST TIME)
-========================================================= */
-
-.timeline-card-mini {
-  position: relative;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-/* Highlight best card */
+/* Best highlight */
 .timeline-card-mini.timeline-best {
-  transform: translateY(-4px);
   box-shadow:
     0 0 0 1px rgba(34, 197, 94, 0.25),
-    0 0 22px rgba(34, 197, 94, 0.45),
-    0 12px 28px rgba(0, 0, 0, 0.45);
-}
-
-/* Subtle glow ring */
-.timeline-card-mini.timeline-best::before {
-  content: "";
-  position: absolute;
-  inset: -2px;
-  border-radius: 16px;
-  pointer-events: none;
-  box-shadow: 0 0 28px rgba(34, 197, 94, 0.35);
-}
-
-/* Emphasize label */
-.timeline-card-mini.timeline-best strong {
-  color: #22c55e;
-}
-
-/* Slightly stronger status pill */
-.timeline-card-mini.timeline-best .timeline-status.good {
-  background: rgba(34, 197, 94, 0.2);
-  color: #22c55e;
+    0 0 22px rgba(34, 197, 94, 0.45);
 }
 
 /* =========================================================
@@ -322,13 +682,492 @@
 ========================================================= */
 
 @media (max-width: 768px) {
+  .timeline-grid {
+    grid-template-columns: 1fr;
+  }
+
   .dashboard {
     padding: 16px;
   }
+}
 
-  .row-right {
-    max-width: 100%;
-    align-items: flex-start;
+/* =========================================================
+   HERO CONTEXTUAL ANIMATIONS (SAFE)
+========================================================= */
+
+/* Common atmosphere animation base */
+.hero-atmosphere {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+/* ☀️ SUNNY — gentle pulsing glow */
+.weather-sunny .hero-atmosphere {
+  background: radial-gradient(circle at 70% 25%,
+      rgba(255, 200, 80, 0.45),
+      rgba(255, 200, 80, 0.15),
+      transparent 65%);
+  animation: sunPulse 6s ease-in-out infinite;
+}
+
+@keyframes sunPulse {
+  0% {
+    opacity: 0.85;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.85;
+  }
+}
+
+/* ☁️ CLOUDY — slow horizontal drift */
+.weather-cloudy .hero-atmosphere {
+  background: linear-gradient(120deg,
+      rgba(255, 255, 255, 0.12),
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.12));
+  animation: cloudDrift 20s linear infinite;
+}
+
+@keyframes cloudDrift {
+  from {
+    transform: translateX(-12%);
+  }
+
+  to {
+    transform: translateX(12%);
+  }
+}
+
+/* 🌧 RAINY — diagonal rain sweep */
+.weather-rainy .hero-atmosphere {
+  background-image: repeating-linear-gradient(-45deg,
+      rgba(255, 255, 255, 0.12),
+      rgba(255, 255, 255, 0.12) 2px,
+      transparent 2px,
+      transparent 8px);
+  background-size: 8px 18px;
+  animation: rainFall 1.2s linear infinite;
+}
+
+@keyframes rainFall {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 0 18px;
+  }
+}
+
+/* ❄️ SNOWY — floating particles */
+.weather-snowy .hero-atmosphere {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.8) 1px,
+      transparent 1px);
+  background-size: 18px 18px;
+  animation: snowFloat 12s linear infinite;
+}
+
+@keyframes snowFloat {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 0 120px;
+  }
+}
+
+/* 🌫 DEFAULT — subtle ambient motion */
+.weather-default .hero-atmosphere {
+  background: radial-gradient(circle at 50% 30%,
+      rgba(148, 163, 184, 0.25),
+      transparent 65%);
+  animation: ambientShift 10s ease-in-out infinite;
+}
+
+@keyframes ambientShift {
+  0% {
+    opacity: 0.7;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0.7;
+  }
+}
+
+/* =========================================================
+   HERO LAYOUT REFINEMENT
+========================================================= */
+
+.hero-layout {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 2.2fr 1.2fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Right side stack */
+.hero-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Prevent KPI & Timeline from stretching */
+.hero-side .kpi-strip,
+.hero-side .timeline-wrapper {
+  flex-shrink: 0;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 1024px) {
+  .hero-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-side {
+    order: 2;
+  }
+
+  .hero-main {
+    order: 1;
+  }
+}
+
+/* =========================================================
+   RIGHT SIDE SUMMARY CARDS – VISUAL NORMALIZATION ONLY
+========================================================= */
+
+/* Base card alignment */
+.dashboard-wide .card,
+.dashboard-grid .card {
+  padding: 18px 20px;
+}
+
+/* Air Quality / Health / Best Time cards */
+.card>.kpi-row,
+.card>.health,
+.card>.impact-score {
+  align-items: center;
+}
+
+/* Title consistency */
+.card h3,
+.card h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.25;
+}
+
+/* Secondary text */
+.card small,
+.card p {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  line-height: 1.35;
+}
+
+/* Icon alignment */
+.card svg,
+.card .kpi-icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Health / Best time text wrapping */
+.card .health strong,
+.card .impact-score {
+  line-height: 1.3;
+}
+
+/* Prevent awkward vertical stretching */
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Mobile tightening */
+@media (max-width: 768px) {
+
+  .dashboard-wide .card,
+  .dashboard-grid .card {
+    padding: 16px;
+  }
+}
+
+/* =========================================================
+   🔧 HERO FINAL STABILIZATION (DO NOT REMOVE)
+========================================================= */
+
+/* Ensure natural content flow */
+.hero-content {
+  margin-bottom: 20px;
+}
+
+/* Metrics sit naturally under content */
+.hero-metrics {
+  margin-top: 0;
+  /* ⬅ REMOVE auto push */
+  padding-top: 0;
+}
+
+/* Prevent hero content from floating */
+.hero-left,
+.hero-right {
+  align-self: flex-start;
+}
+
+/* Right temperature block alignment */
+.hero-right {
+  display: block;
+  text-align: right;
+}
+
+/* =========================================================
+   🔧 RIGHT SIDE CARDS ALIGNMENT FIX
+========================================================= */
+
+.card {
+  justify-content: flex-start;
+  /* ⬅ NOT center */
+}
+
+/* Normalize spacing inside cards */
+.card>* {
+  margin-top: 0;
+}
+
+/* Prevent vertical stretch illusion */
+.dashboard-grid .card,
+.dashboard-wide .card {
+  height: auto;
+}
+
+/* =========================================================
+   🔧 HERO METRIC VISUAL BALANCE
+========================================================= */
+
+.hero-metric {
+  height: auto;
+  /* ⬅ remove forced height */
+  padding: 12px 14px;
+}
+
+/* Keep metrics visually compact */
+.metric-text strong {
+  line-height: 1.25;
+}
+
+/* =========================================================
+   🔧 MOBILE SAFETY
+========================================================= */
+
+@media (max-width: 768px) {
+  .hero-weather {
+    padding: 24px 20px;
+  }
+}
+
+/* =========================================================
+   HERO – CONTENT-DRIVEN HEIGHT (PREMIUM FIX)
+========================================================= */
+
+/* Metrics naturally end the hero */
+.hero-metrics {
+  margin-top: 22px;
+  padding-bottom: 8px;
+  /* subtle breathing space */
+}
+
+/* Remove artificial vertical stretching */
+.hero-weather>* {
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   HERO WEATHER – SINGLE SOURCE OF TRUTH (FINAL)
+========================================================= */
+
+.hero-weather {
+  position: relative;
+  margin: 24px;
+  padding: 28px 32px;
+  border-radius: 22px;
+  overflow: hidden;
+  isolation: isolate;
+
+  background: radial-gradient(120% 120% at top left,
+      #0f172a 0%,
+      #020617 65%);
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+/* Atmosphere */
+.hero-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Content flow */
+.hero-content,
+.hero-metrics {
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================================
+   HERO CONTENT
+========================================================= */
+
+.hero-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.hero-left h1 {
+  font-size: 2.35rem;
+  margin: 0;
+  line-height: 1.15;
+}
+
+.hero-condition {
+  margin-top: 4px;
+  font-size: 0.95rem;
+  color: #94a3b8;
+}
+
+.hero-right {
+  text-align: right;
+}
+
+.hero-temp {
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.hero-meta {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: #cbd5f5;
+}
+
+/* =========================================================
+   HERO METRICS (CONTENT-DRIVEN)
+========================================================= */
+
+.hero-metrics {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.hero-metric {
+  background: rgba(2, 6, 23, 0.7);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.metric-icon {
+  font-size: 1.2rem;
+}
+
+.metric-text small {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.metric-text strong {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+  .hero-content {
+    flex-direction: column;
+  }
+
+  .hero-right {
     text-align: left;
+  }
+
+  .hero-metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   HERO HEIGHT – FINAL LOCK
+========================================================= */
+
+.hero-weather {
+  height: auto;
+  min-height: unset;
+  align-self: flex-start;
+  /* ⬅ ignore grid stretching */
+}
+
+/* =========================================================
+   🔧 HERO ↔ KPI TRUE BASELINE ALIGNMENT (FINAL)
+========================================================= */
+
+/*
+  Hero content starts AFTER its internal padding.
+  KPI cards start at their own padding.
+  This spacer aligns their visual baselines.
+*/
+
+.hero-main::before {
+  content: "";
+  display: block;
+  height: 14px;
+  /* EXACT match to .hero-content top padding */
+}
+
+.hero-side::before {
+  content: "";
+  display: block;
+  height: 20px;
+  /* SAME height — shared baseline */
+}
+
+/* Ensure spacer does not affect mobile */
+@media (max-width: 1024px) {
+
+  .hero-main::before,
+  .hero-side::before {
+    display: none;
   }
 }

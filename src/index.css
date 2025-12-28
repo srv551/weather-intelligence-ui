@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =========================================================
+   GLOBAL CARD BASE
+========================================================= */
+
 .card {
   background: linear-gradient(180deg, #0f172a, #020617);
   color: white;
@@ -9,88 +13,53 @@
   border-radius: 20px;
 }
 
-.health-item {
-  padding: 14px;
-  margin-top: 12px;
-  background: white;
-  color: black;
-  border-radius: 12px;
-}
+/* =========================================================
+   HERO ATMOSPHERE (ONE SYSTEM ONLY)
+========================================================= */
 
-.gauge {
-  position: relative;
-  margin: 20px 0;
-}
-
-.label {
-  font-weight: 600;
-  margin-top: 6px;
-}
-
-/* ===== AMBIENT BASE ===== */
-.ambient {
+.hero-atmosphere {
   position: absolute;
   inset: 0;
+  z-index: 1;
   pointer-events: none;
-  overflow: hidden;
-  z-index: 0;
+  opacity: 0.95;
+  transition: background 0.6s ease, filter 0.6s ease;
 }
 
-/* ===== RAIN ===== */
-.rain .raindrop {
-  position: absolute;
-  width: 2px;
-  height: 20px;
-  background: rgba(255, 255, 255, 0.4);
-  transform: rotate(15deg);
+/* ☀️ Sunny */
+.weather-sunny .hero-atmosphere {
+  background: radial-gradient(circle at 70% 25%,
+      rgba(255, 200, 80, 0.55),
+      rgba(255, 200, 80, 0.2),
+      transparent 65%);
 }
 
-/* ===== SNOW ===== */
-.snow .snowflake {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.7;
+/* ☁️ Cloudy */
+.weather-cloudy .hero-atmosphere {
+  background: radial-gradient(circle at 30% 30%,
+      rgba(203, 213, 225, 0.35),
+      rgba(148, 163, 184, 0.2),
+      transparent 65%);
 }
 
-/* ===== FOG ===== */
-.fog {
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0.08),
-    rgba(255, 255, 255, 0.02)
-  );
-  animation: fogMove 20s linear infinite;
+/* 🌧 Rainy */
+.weather-rainy .hero-atmosphere {
+  background: linear-gradient(to bottom,
+      rgba(100, 116, 139, 0.45),
+      rgba(2, 6, 23, 0.9));
 }
 
-@keyframes fogMove {
-  from { transform: translateX(-20%); }
-  to { transform: translateX(20%); }
+/* ❄️ Snow */
+.weather-snowy .hero-atmosphere {
+  background: radial-gradient(circle at 50% 30%,
+      rgba(226, 232, 240, 0.45),
+      rgba(148, 163, 184, 0.2),
+      transparent 70%);
 }
 
-/* ===== CLOUDS ===== */
-.clouds {
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(255, 255, 255, 0.08),
-    transparent 60%
-  );
-  animation: cloudsMove 30s ease-in-out infinite;
-}
-
-@keyframes cloudsMove {
-  0% { transform: translateX(-10%); }
-  50% { transform: translateX(10%); }
-  100% { transform: translateX(-10%); }
-}
-
-/* ===== SUN ===== */
-.sun {
-  background: radial-gradient(
-    circle at top right,
-    rgba(255, 200, 0, 0.25),
-    transparent 60%
-  );
+/* 🌫 Default */
+.weather-default .hero-atmosphere {
+  background: radial-gradient(circle at 50% 30%,
+      rgba(148, 163, 184, 0.25),
+      transparent 65%);
 }

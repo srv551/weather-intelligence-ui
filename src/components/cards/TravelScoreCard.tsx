@@ -6,37 +6,51 @@ import { FaPlaneDeparture } from "react-icons/fa";
 interface Props {
   score: number;
   label: string;
+  unavailable?: boolean;
 }
 
-export default function TravelScoreCard({ score, label }: Props) {
+export default function TravelScoreCard({
+  score,
+  label,
+  unavailable = false,
+}: Props) {
   /* ---------- Gauge config ---------- */
   const radius = 62;
   const stroke = 10;
   const normalizedRadius = radius - stroke / 2;
   const circumference = normalizedRadius * 2 * Math.PI;
-  const dashOffset =
-    circumference - (score / 100) * circumference;
 
-  const color =
-    score >= 80
+  const safeScore = unavailable ? 0 : score;
+  const dashOffset =
+    circumference - (safeScore / 100) * circumference;
+
+  const color = unavailable
+    ? "#64748b"
+    : score >= 80
       ? "#22c55e"
       : score >= 60
-      ? "#facc15"
-      : "#ef4444";
+        ? "#facc15"
+        : "#ef4444";
 
   /* ---------- Animated number ---------- */
   const count = useMotionValue(0);
   const displayValue = useTransform(count, (v) =>
-    Math.round(v).toString()
+    unavailable ? "—" : Math.round(v).toString()
   );
 
   useEffect(() => {
+    if (unavailable) {
+      count.set(0);
+      return;
+    }
+
     const controls = animate(count, score, {
       duration: 1.2,
       ease: "easeOut",
     });
+
     return controls.stop;
-  }, [score]);
+  }, [score, unavailable]);
 
   return (
     <AnimatedCard>
@@ -53,6 +67,7 @@ export default function TravelScoreCard({ score, label }: Props) {
           width: 160,
           height: 160,
           margin: "18px auto",
+          opacity: unavailable ? 0.75 : 1,
         }}
       >
         <svg width={160} height={160}>
@@ -79,7 +94,9 @@ export default function TravelScoreCard({ score, label }: Props) {
             style={{
               transform: "rotate(-90deg)",
               transformOrigin: "50% 50%",
-              filter: `drop-shadow(0 0 6px ${color})`,
+              filter: unavailable
+                ? "none"
+                : `drop-shadow(0 0 8px ${color})`,
             }}
           />
         </svg>
@@ -104,12 +121,17 @@ export default function TravelScoreCard({ score, label }: Props) {
           >
             {displayValue}
           </motion.span>
-          <small>{label}</small>
+
+          <small style={{ opacity: 0.8 }}>
+            {unavailable ? "Not available" : label}
+          </small>
         </div>
       </div>
 
-      <p style={{ textAlign: "center", opacity: 0.85 }}>
-        Overall suitability for travel today
+      <p style={{ textAlign: "center", opacity: 0.8 }}>
+        {unavailable
+          ? "Travel comfort score is unavailable for this location"
+          : "Overall suitability for travel today"}
       </p>
     </AnimatedCard>
   );

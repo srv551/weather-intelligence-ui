@@ -1,27 +1,25 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE = import.meta.env.VITE_API_BASE_URL;
+
+const headers = {
+  "ngrok-skip-browser-warning": "true",
+};
 
 export async function getTodaySummary(city: string) {
-  console.log("UI sending city:", city);
   const res = await fetch(
-    `${BASE_URL}/api/v1/weather/today-summary/${city}`
+    `${BASE}/api/v1/weather/today-summary/${encodeURIComponent(city)}`,
+    { headers }
   );
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch weather data");
-  }
-
+  if (!res.ok) throw new Error("Failed to fetch today summary");
   return res.json();
 }
 
 export async function getTravelScore(city: string) {
   const res = await fetch(
-    `${BASE_URL}/api/v1/weather/travel-score/${city}`
+    `${BASE}/api/v1/weather/travel-score/${encodeURIComponent(city)}`,
+    { headers }
   );
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch travel score");
-  }
-
+  if (!res.ok) throw new Error("Failed to fetch travel score");
   return res.json();
 }
-
